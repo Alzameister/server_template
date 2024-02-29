@@ -32,7 +32,7 @@ public class UserService {
 
   @Autowired
   public UserService(@Qualifier("userRepository") UserRepository userRepository) {
-    this.userRepository = userRepository;
+      this.userRepository = userRepository;
   }
 
   public List<User> getUsers() {
@@ -40,17 +40,37 @@ public class UserService {
   }
 
   public User createUser(User newUser) {
-    newUser.setToken(UUID.randomUUID().toString());
-    newUser.setStatus(UserStatus.OFFLINE);
-    checkIfUserExists(newUser);
-    // saves the given entity but data is only persisted in the database once
-    // flush() is called
-    newUser = userRepository.save(newUser);
-    userRepository.flush();
+      newUser.setToken(UUID.randomUUID().toString());
+      newUser.setStatus(UserStatus.ONLINE);
+      checkIfUserExists(newUser);
+      // saves the given entity but data is only persisted in the database once
+      // flush() is called
+      newUser = userRepository.save(newUser);
+      userRepository.flush();
 
-    log.debug("Created Information for User: {}", newUser);
-    return newUser;
+      log.debug("Created Information for User: {}", newUser);
+      return newUser;
   }
+
+  public User loginUser(User userToBeLoggedIn) {
+      User userByUsernameAndPassword = userRepository.findByUsernameAndPassword(userToBeLoggedIn.getUsername(), userToBeLoggedIn.getPassword());
+
+      if (userByUsernameAndPassword == null) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The credentials provided do not exist. Therefore, you could not be logged in!");
+      }
+      userByUsernameAndPassword.setStatus(UserStatus.ONLINE);
+      userToBeLoggedIn = userRepository.save(userByUsernameAndPassword);
+      userRepository.flush();
+      return userToBeLoggedIn;
+  }
+
+  //TODO: Logout User function to set status to offline / remove token?
+    public User logoutUser(User userToBeLoggedOut) {
+      userToBeLoggedOut.setStatus(UserStatus.OFFLINE);
+      userToBeLoggedOut = userRepository.save(userToBeLoggedOut);
+      userRepository.flush();
+      return userToBeLoggedOut;
+    }
 
   /**
    * This is a helper method that will check the uniqueness criteria of the
@@ -64,16 +84,10 @@ public class UserService {
    */
   private void checkIfUserExists(User userToBeCreated) {
     User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
-    User userByName = userRepository.findByName(userToBeCreated.getName());
 
     String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
-    if (userByUsername != null && userByName != null) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-          String.format(baseErrorMessage, "username and the name", "are"));
-    } else if (userByUsername != null) {
+    if (userByUsername != null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "username", "is"));
-    } else if (userByName != null) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "name", "is"));
     }
   }
 }

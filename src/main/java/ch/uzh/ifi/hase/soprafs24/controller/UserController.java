@@ -54,4 +54,32 @@ public class UserController {
     // convert internal representation of user back to API
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
   }
+
+  //TODO: Logout logic in client
+  @PostMapping("/logout")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public UserGetDTO logoutUser(@RequestBody UserPostDTO userPostDTO) {
+    // convert API user to internal representation
+    User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+
+    // check credentials
+    User createdUser = userService.logoutUser(userInput);
+
+    // convert internal representation of user back to API
+    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
+  }
+  @PostMapping("/login")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public UserGetDTO loginUser(@RequestBody UserPostDTO userPostDTO) {
+    // convert API user to internal representation
+    User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+
+    // check credentials
+    User createdUser = userService.loginUser(userInput);
+
+    // convert internal representation of user back to API
+    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
+}
 }
