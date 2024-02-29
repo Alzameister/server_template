@@ -55,7 +55,6 @@ public class UserController {
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
   }
 
-  //TODO: Logout logic in client
   @PostMapping("/logout")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
