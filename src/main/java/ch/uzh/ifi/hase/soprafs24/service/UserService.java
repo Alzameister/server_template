@@ -76,6 +76,9 @@ public class UserService {
 
     public void updateUser(User userInput) {
         User userToBeUpdated = userRepository.findByid(userInput.getId());
+        if (userToBeUpdated == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The user could not be found");
+        }
 
         if(userInput.getUsername() != null){
             userToBeUpdated.setUsername(userInput.getUsername());
@@ -100,7 +103,7 @@ public class UserService {
     public User getUserByID(Long userID) {
         User user = userRepository.findByid(userID);
         if(user == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user does not exist.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The user could not be found.");
         }
         return userRepository.findByid(userID);
     }
@@ -113,7 +116,7 @@ public class UserService {
     public User getUserByToken(User userByToken) {
         User user = userRepository.findBytoken(userByToken.getToken());
         if(user == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user does not exist.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The user could not be found.");
         }
         return user;
     }

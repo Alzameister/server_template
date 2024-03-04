@@ -46,7 +46,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserGetDTO getUserByID(@PathVariable("userID") long id) {
-        //TODO: REST specification wants userID as a long type input?
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUserByID(id));
     }
 
@@ -96,7 +95,8 @@ public class UserController {
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
   }
 
-  @PutMapping("/updateUser")
+  //TODO: Put User?
+  @PutMapping("/users/{userID}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ResponseBody
   public void updateUser(@RequestBody UpdatePutDTO updatePutDTO) {
