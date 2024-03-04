@@ -5,6 +5,8 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * Internal User Representation
@@ -38,8 +40,12 @@ public class User implements Serializable {
   @Column(nullable = false)
   private UserStatus status;
 
-  @Column(nullable = false)
+  //DateFormat formatter = new SimpleDateFormat("yyyy-dd-MM");
+    @Column(nullable = false)
   private final Date creationDate = new Date();
+
+  @Column
+  private Date birthDate = null;
 
   public Long getId() {
     return id;
@@ -81,5 +87,11 @@ public class User implements Serializable {
     this.status = status;
   }
 
-  public Date getDateCreated() { return creationDate; }
+  public Date getCreationDate() { return creationDate; }
+  public Date getBirthDate() {
+        return birthDate;
+    }
+  public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
 }

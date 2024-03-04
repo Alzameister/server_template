@@ -3,6 +3,8 @@ package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UpdatePutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.UserByTokenGetDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,12 +66,56 @@ public class UserService {
       return userToBeLoggedIn;
   }
 
-  //TODO: Logout User function to set status to offline / remove token?
     public User logoutUser(User userToBeLoggedOut) {
+      userToBeLoggedOut = userRepository.findBytoken(userToBeLoggedOut.getToken());
       userToBeLoggedOut.setStatus(UserStatus.OFFLINE);
-      userToBeLoggedOut = userRepository.save(userToBeLoggedOut);
+      userRepository.save(userToBeLoggedOut);
       userRepository.flush();
       return userToBeLoggedOut;
+    }
+
+    public void updateUser(User userInput) {
+        User userToBeUpdated = userRepository.findByid(userInput.getId());
+
+        if(userInput.getUsername() != null){
+            userToBeUpdated.setUsername(userInput.getUsername());
+        }
+
+        if(userInput.getBirthDate() != null){
+            userToBeUpdated.setBirthDate(userInput.getBirthDate());
+        }
+
+        if(userInput.getUsername() != null || userInput.getBirthDate() != null){
+            userRepository.save(userToBeUpdated);
+            userRepository.flush();
+        }
+
+    }
+
+    /**
+     * Helper method to find a User in the repository based on the userID.
+     * @param userID
+     * @return
+     */
+    public User getUserByID(Long userID) {
+        User user = userRepository.findByid(userID);
+        if(user == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user does not exist.");
+        }
+        return userRepository.findByid(userID);
+    }
+
+    /**
+     * Helper method to find a logged-in User in the repository based on the token.
+     * @param userByToken
+     * @return
+     */
+    public User getUserByToken(User userByToken) {
+        User user = userRepository.findBytoken(userByToken.getToken());
+        if(user == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user does not exist.");
+        }
+        return user;
     }
 
   /**

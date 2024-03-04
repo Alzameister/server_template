@@ -1,8 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -42,6 +41,24 @@ public class UserController {
     return userGetDTOs;
   }
 
+    //TODO: Query instead of RequestBody?
+    @GetMapping("/users/{userID}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public UserGetDTO getUserByID(@PathVariable("userID") long id) {
+        //TODO: REST specification wants userID as a long type input?
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUserByID(id));
+    }
+
+    //TODO: Query instead of RequestBody?
+    @GetMapping("/getUserByToken")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public UserGetDTO getUserByToken(@RequestBody UserByTokenGetDTO userByTokenGetDTO) {
+      User userByToken = DTOMapper.INSTANCE.convertUserByTokenGetDTOToEntity(userByTokenGetDTO);
+      return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUserByToken(userByToken));
+    }
+
   @PostMapping("/users")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
@@ -58,15 +75,12 @@ public class UserController {
   @PostMapping("/logout")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
-  public UserGetDTO logoutUser(@RequestBody UserPostDTO userPostDTO) {
+  public void logoutUser(@RequestBody LogoutPostDTO logoutPostDTO) {
     // convert API user to internal representation
-    User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+    User userToLogout = DTOMapper.INSTANCE.convertLogoutPostDTOtoEntity(logoutPostDTO);
 
-    // check credentials
-    User createdUser = userService.logoutUser(userInput);
-
-    // convert internal representation of user back to API
-    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
+    // perform logout
+    User createdUser = userService.logoutUser(userToLogout);
   }
   @PostMapping("/login")
   @ResponseStatus(HttpStatus.OK)
@@ -80,5 +94,17 @@ public class UserController {
 
     // convert internal representation of user back to API
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
-}
+  }
+
+  @PutMapping("/updateUser")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseBody
+  public void updateUser(@RequestBody UpdatePutDTO updatePutDTO) {
+
+      // convert API user to internal representation
+      User userInput = DTOMapper.INSTANCE.convertUpdatePutDTOtoEntity(updatePutDTO);
+
+      // check credentials
+      userService.updateUser(userInput);
+  }
 }

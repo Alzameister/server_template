@@ -47,7 +47,7 @@ public class UserControllerTest {
   public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
     // given
     User user = new User();
-    user.setName("Firstname Lastname");
+    //user.setName("Firstname Lastname");
     user.setUsername("firstname@lastname");
     user.setStatus(UserStatus.OFFLINE);
 
@@ -63,7 +63,7 @@ public class UserControllerTest {
     // then
     mockMvc.perform(getRequest).andExpect(status().isOk())
         .andExpect(jsonPath("$", hasSize(1)))
-        .andExpect(jsonPath("$[0].name", is(user.getName())))
+        //.andExpect(jsonPath("$[0].name", is(user.getName())))
         .andExpect(jsonPath("$[0].username", is(user.getUsername())))
         .andExpect(jsonPath("$[0].status", is(user.getStatus().toString())));
   }
