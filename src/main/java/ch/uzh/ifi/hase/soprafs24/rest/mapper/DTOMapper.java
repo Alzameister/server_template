@@ -18,7 +18,7 @@ import org.mapstruct.factory.Mappers;
  */
 @Mapper
 public interface DTOMapper {
-
+    //TODO: Cleanup too many mappings?
     DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
 
     @Mapping(source = "username", target = "username")
