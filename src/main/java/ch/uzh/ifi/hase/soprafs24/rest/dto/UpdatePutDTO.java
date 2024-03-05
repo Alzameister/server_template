@@ -5,31 +5,25 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class UpdatePutDTO {
   private String username;
 
-  private Date birthDate;
+  private String birthDate;
 
   private long id;
 
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(String birthDate) throws ParseException {
         if(birthDate != null){
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-dd-MM");
-            try {
-                this.birthDate = formatter.parse(birthDate);
-            }
-            //TODO: Status bad request reason is not returned
-            catch (ParseException e) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The format of your birth date is not correct.");
-            }
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = formatter.parse(birthDate);
+            formatter = new SimpleDateFormat("dd-MM-yyyy");
+            this.birthDate = formatter.format(date);
         }
 
     }

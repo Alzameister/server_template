@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,8 +100,7 @@ public class UserController {
     @PutMapping("/users/{userID}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
-    //TODO: Change date format
-    public void updateUser(@RequestBody UpdatePutDTO updatePutDTO) {
+    public void updateUser(@RequestBody UpdatePutDTO updatePutDTO) throws ParseException {
         // convert API user to internal representation
         User userInput = DTOMapper.INSTANCE.convertUpdatePutDTOtoEntity(updatePutDTO);
 

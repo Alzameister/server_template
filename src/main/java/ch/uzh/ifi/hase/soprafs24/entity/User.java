@@ -5,7 +5,6 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 /**
@@ -21,7 +20,6 @@ import java.text.SimpleDateFormat;
 @Entity
 @Table(name = "USER")
 public class User implements Serializable {
-
   private static final long serialVersionUID = 1L;
 
   @Id
@@ -40,12 +38,12 @@ public class User implements Serializable {
   @Column(nullable = false)
   private UserStatus status;
 
-  //DateFormat formatter = new SimpleDateFormat("yyyy-dd-MM");
+  //
     @Column(nullable = false)
-  private final Date creationDate = new Date();
+  private final String creationDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 
   @Column
-  private Date birthDate = null;
+  private String birthDate = null;
 
   public Long getId() {
     return id;
@@ -87,11 +85,13 @@ public class User implements Serializable {
     this.status = status;
   }
 
-  public Date getCreationDate() { return creationDate; }
-  public Date getBirthDate() {
+  public String getCreationDate() { return creationDate; }
+  public String getBirthDate() {
         return birthDate;
     }
-  public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
+  public void setBirthDate(String birthDate) {
+      if (birthDate != null) {
+          this.birthDate = birthDate;
+      }
     }
 }
