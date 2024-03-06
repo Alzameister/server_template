@@ -39,7 +39,7 @@ public class User implements Serializable {
   private UserStatus status;
 
   //
-    @Column(nullable = false)
+  @Column(nullable = false)
   private final String creationDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 
   @Column

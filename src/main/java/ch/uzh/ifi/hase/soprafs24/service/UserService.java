@@ -3,8 +3,6 @@ package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UpdatePutDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserByTokenGetDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,18 +64,18 @@ public class UserService {
       return userToBeLoggedIn;
   }
 
-    public User logoutUser(User userToBeLoggedOut) {
+    public void logoutUser(User userToBeLoggedOut) {
       userToBeLoggedOut = userRepository.findBytoken(userToBeLoggedOut.getToken());
       userToBeLoggedOut.setStatus(UserStatus.OFFLINE);
       userRepository.save(userToBeLoggedOut);
       userRepository.flush();
-      return userToBeLoggedOut;
     }
 
     public void updateUser(User userInput) {
         User userToBeUpdated = userRepository.findByid(userInput.getId());
         if (userToBeUpdated == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The user could not be found");
+            String baseErrorMessage = "User with %s was not found";
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, userInput.getId()));
         }
 
         if(userInput.getUsername() != null){
@@ -97,28 +95,14 @@ public class UserService {
 
     /**
      * Helper method to find a User in the repository based on the userID.
-     * @param userID
-     * @return
      */
     public User getUserByID(Long userID) {
         User user = userRepository.findByid(userID);
         if(user == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The user could not be found.");
+            String baseErrorMessage = "User with %s was not found";
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, userID));
         }
         return userRepository.findByid(userID);
-    }
-
-    /**
-     * Helper method to find a logged-in User in the repository based on the token.
-     * @param userByToken
-     * @return
-     */
-    public User getUserByToken(User userByToken) {
-        User user = userRepository.findBytoken(userByToken.getToken());
-        if(user == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The user could not be found.");
-        }
-        return user;
     }
 
   /**
@@ -127,14 +111,12 @@ public class UserService {
    * defined in the User entity. The method will do nothing if the input is unique
    * and throw an error otherwise.
    *
-   * @param userToBeCreated
-   * @throws org.springframework.web.server.ResponseStatusException
    * @see User
    */
   private void checkIfUserExists(User userToBeCreated) {
     User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
 
-    String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
+    String baseErrorMessage = "add User failed because username already exists";
     if (userByUsername != null) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage, "username", "is"));
     }

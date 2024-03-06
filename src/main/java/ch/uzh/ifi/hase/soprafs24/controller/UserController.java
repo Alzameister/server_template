@@ -6,8 +6,6 @@ import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,15 +48,6 @@ public class UserController {
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUserByID(id));
     }
 
-    //TODO: Query instead of RequestBody?
-    @GetMapping("/userByToken")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public UserGetDTO getUserByToken(@RequestBody UserByTokenGetDTO userByTokenGetDTO) {
-        User userByToken = DTOMapper.INSTANCE.convertUserByTokenGetDTOToEntity(userByTokenGetDTO);
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUserByToken(userByToken));
-    }
-
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -72,7 +61,7 @@ public class UserController {
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
     }
 
-    @PostMapping("/logout")
+    @PutMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public void logoutUser(@RequestBody LogoutPostDTO logoutPostDTO) {
@@ -80,9 +69,9 @@ public class UserController {
         User userToLogout = DTOMapper.INSTANCE.convertLogoutPostDTOtoEntity(logoutPostDTO);
 
         // perform logout
-        User createdUser = userService.logoutUser(userToLogout);
+        userService.logoutUser(userToLogout);
     }
-    @PostMapping("/login")
+    @PutMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserGetDTO loginUser(@RequestBody UserPostDTO userPostDTO) {
@@ -100,7 +89,7 @@ public class UserController {
     @PutMapping("/users/{userID}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
-    public void updateUser(@RequestBody UpdatePutDTO updatePutDTO) throws ParseException {
+    public void updateUser(@RequestBody UpdatePutDTO updatePutDTO) {
         // convert API user to internal representation
         User userInput = DTOMapper.INSTANCE.convertUpdatePutDTOtoEntity(updatePutDTO);
 
