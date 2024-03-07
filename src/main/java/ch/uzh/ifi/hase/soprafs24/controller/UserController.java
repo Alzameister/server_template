@@ -40,7 +40,6 @@ public class UserController {
         return userGetDTOs;
     }
 
-    //TODO: Query instead of RequestBody?
     @GetMapping("/users/{userID}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -85,7 +84,6 @@ public class UserController {
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
     }
 
-    //TODO: Put User?
     @PutMapping("/users/{userID}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody

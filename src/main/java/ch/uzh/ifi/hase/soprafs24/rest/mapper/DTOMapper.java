@@ -18,7 +18,6 @@ import org.mapstruct.factory.Mappers;
  */
 @Mapper
 public interface DTOMapper {
-    //TODO: Cleanup too many mappings?
     DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
 
     @Mapping(source = "username", target = "username")
@@ -39,7 +38,4 @@ public interface DTOMapper {
     @Mapping(source = "creationDate", target = "creationDate")
     @Mapping(source = "birthDate", target = "birthDate")
     UserGetDTO convertEntityToUserGetDTO(User user);
-
-    @Mapping(source = "token", target = "token")
-    User convertUserByTokenGetDTOToEntity(UserByTokenGetDTO userByTokenGetDTO);
 }
