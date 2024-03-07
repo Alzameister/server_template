@@ -74,7 +74,7 @@ public class UserService {
     public void updateUser(User userInput) {
         User userToBeUpdated = userRepository.findByid(userInput.getId());
         if (userToBeUpdated == null){
-            String baseErrorMessage = "User with %s was not found";
+            String baseErrorMessage = "User with ID: %s was not found";
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, userInput.getId()));
         }
 
@@ -93,9 +93,6 @@ public class UserService {
 
     }
 
-    /**
-     * Helper method to find a User in the repository based on the userID.
-     */
     public User getUserByID(Long userID) {
         User user = userRepository.findByid(userID);
         if(user == null){
@@ -118,7 +115,7 @@ public class UserService {
 
     String baseErrorMessage = "add User failed because username already exists";
     if (userByUsername != null) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage, "username", "is"));
+      throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage));
     }
   }
 }

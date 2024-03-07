@@ -1,4 +1,3 @@
-/*
 package ch.uzh.ifi.hase.soprafs24.repository;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
@@ -33,7 +32,7 @@ public class UserRepositoryIntegrationTest {
     entityManager.flush();
 
     // when
-    User found = userRepository.findByPassword(user.getPassword());
+    User found = userRepository.findByUsername(user.getUsername());
 
     // then
     assertNotNull(found.getId());
@@ -43,4 +42,3 @@ public class UserRepositoryIntegrationTest {
     assertEquals(found.getStatus(), user.getStatus());
   }
 }
-*/

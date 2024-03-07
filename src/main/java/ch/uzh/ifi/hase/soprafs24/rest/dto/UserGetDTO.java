@@ -58,4 +58,5 @@ public class UserGetDTO {
     public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
+
 }
