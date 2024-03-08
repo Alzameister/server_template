@@ -56,7 +56,7 @@ public class UserService {
       User userByUsernameAndPassword = userRepository.findByUsernameAndPassword(userToBeLoggedIn.getUsername(), userToBeLoggedIn.getPassword());
 
       if (userByUsernameAndPassword == null) {
-          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The credentials provided do not exist. Therefore, you could not be logged in!");
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The credentials provided do not match. Please try again.");
       }
       userByUsernameAndPassword.setStatus(UserStatus.ONLINE);
       userToBeLoggedIn = userRepository.save(userByUsernameAndPassword);
@@ -79,6 +79,7 @@ public class UserService {
         }
 
         if(userInput.getUsername() != null){
+            checkIfUserExists(userInput);
             userToBeUpdated.setUsername(userInput.getUsername());
         }
 
@@ -113,7 +114,7 @@ public class UserService {
   private void checkIfUserExists(User userToBeCreated) {
     User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
 
-    String baseErrorMessage = "add User failed because username already exists";
+    String baseErrorMessage = "This username already exists. Please choose another one";
     if (userByUsername != null) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(baseErrorMessage));
     }

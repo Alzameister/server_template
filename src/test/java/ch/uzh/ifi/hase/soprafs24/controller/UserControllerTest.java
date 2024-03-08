@@ -127,17 +127,11 @@ public class UserControllerTest {
       user.setToken("1");
       user.setStatus(UserStatus.ONLINE);
 
-      UpdatePutDTO updatePutDTO = new UpdatePutDTO();
-      updatePutDTO.setBirthDate("15-09-2002");
-      updatePutDTO.setUsername("testChangeUsername");
-
       given(userService.getUserByID(Mockito.any())).willReturn(user);
 
-      MockHttpServletRequestBuilder postRequest = get("/users/{userid}", 1L)
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(asJsonString(updatePutDTO));
+      MockHttpServletRequestBuilder getRequest = get("/users/{userid}", 1L);
 
-      mockMvc.perform(postRequest)
+      mockMvc.perform(getRequest)
               .andExpect(status().isOk())
               .andExpect(jsonPath("$.id", is(user.getId().intValue())))
               .andExpect(jsonPath("$.username", is(user.getUsername())))
@@ -149,9 +143,9 @@ public class UserControllerTest {
     public void getUser_invalidUser_throwError() throws Exception {
         given(userService.getUserByID(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID: 2 was not found"));
 
-        MockHttpServletRequestBuilder postRequest = get("/users/{userid}", 2L);
+        MockHttpServletRequestBuilder getRequest = get("/users/{userid}", 2L);
 
-        mockMvc.perform(postRequest)
+        mockMvc.perform(getRequest)
                 .andExpect(status().isNotFound())
                 .andExpect(status().reason("User with ID: 2 was not found"));
     }
@@ -173,11 +167,11 @@ public class UserControllerTest {
 
         given(userService.getUserByID(Mockito.any())).willReturn(user);
 
-        MockHttpServletRequestBuilder postRequest = put("/users/{userid}", 1L)
+        MockHttpServletRequestBuilder putRequest = put("/users/{userid}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(updatePutDTO));
 
-        mockMvc.perform(postRequest)
+        mockMvc.perform(putRequest)
                 .andExpect(status().isNoContent());
     }
 
@@ -185,9 +179,9 @@ public class UserControllerTest {
     public void putUser_invalidUser_NoReturn() throws Exception {
         given(userService.getUserByID(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID: 2 was not found"));
 
-        MockHttpServletRequestBuilder postRequest = get("/users/{userid}", 2L);
+        MockHttpServletRequestBuilder getRequest = get("/users/{userid}", 2L);
 
-        mockMvc.perform(postRequest)
+        mockMvc.perform(getRequest)
                 .andExpect(status().isNotFound())
                 .andExpect(status().reason("User with ID: 2 was not found"));
     }
