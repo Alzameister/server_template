@@ -97,7 +97,7 @@ public class UserService {
     public User getUserByID(Long userID) {
         User user = userRepository.findByid(userID);
         if(user == null){
-            String baseErrorMessage = "User with %s was not found";
+            String baseErrorMessage = "User with ID %s was not found";
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, userID));
         }
         return userRepository.findByid(userID);
