@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'gradle:jdk21'
-            label 'docker'
+            label 'docker-agent-jdk'
         }
     }
 
