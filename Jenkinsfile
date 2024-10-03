@@ -4,10 +4,6 @@ pipeline {
             image 'gradle:jdk-21-and-22'
             label 'docker'
         }
-
-        node {
-            label 'jenkins-node-goes-here'
-        }
     }
 
     triggers {
