@@ -3,9 +3,6 @@ pipeline {
         node{
             label 'docker-alpine-jdk'
         }
-        docker {
-            image 'gradle:jdk17'
-        }
     }
 
     triggers {
@@ -14,12 +11,22 @@ pipeline {
 
     stages {
         stage('Build') {
+            agent {
+                docker {
+                    image 'gradle:jdk17'
+                }
+            }
             steps {
                 echo 'Building..'
                 sh './gradlew build -xtest --build-cache --info'
             }
         }
         stage('Test') {
+            agent {
+                docker {
+                    image 'gradle:jdk17'
+                }
+            }
             steps {
                 echo 'Testing..'
                 sh './gradlew test'
