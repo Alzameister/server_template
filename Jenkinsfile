@@ -1,6 +1,9 @@
 pipeline {
     agent {
-        docker {'image: jenkins/agent:alpine-jdk21'}
+        docker {
+            label: 'docker-alpine-jdk'
+            image: 'jenkins/agent:alpine-jdk21'
+        }
     }
 
     triggers {
