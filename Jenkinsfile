@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        docker {image 'gradle:jdk17'}
-    }
+    agent any
 
     triggers {
         pollSCM('*/2 * * * *')
@@ -19,6 +17,13 @@ pipeline {
                 echo 'Testing..'
                 sh './gradlew test'
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning up..'
+            cleanWs()
         }
     }
 }
