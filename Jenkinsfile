@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        docker {'image: alpine:jdk-21'}
+    }
 
     triggers {
         pollSCM('*/2 * * * *')
