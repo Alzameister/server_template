@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'jenkins/agent:alpine-jdk21'
+            image 'gradle:jdk-21-and-22'
         }
     }
 
