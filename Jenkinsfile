@@ -1,6 +1,8 @@
 pipeline {
     agent {
-        label 'docker-alpine-jdk'
+        node{
+            label 'docker-alpine-jdk'
+        }
     }
 
     triggers {
