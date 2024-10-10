@@ -11,6 +11,12 @@ pipeline {
 
     stages {
         stage('Build') {
+            agent {
+                docker {
+                    image 'gradle:jdk17'
+                }
+            }
+
             steps {
                 echo 'Building..'
                 sh './gradlew clean build --info'
