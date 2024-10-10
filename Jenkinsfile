@@ -13,11 +13,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                script {
-                    docker.image('gradle:jdk21').inside {
-                        sh './gradlew --info'
-                    }
-                }
+                sh './gradlew clean build'
             }
         }
         stage('Test') {
