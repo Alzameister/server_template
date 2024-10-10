@@ -19,7 +19,7 @@ pipeline {
 
             steps {
                 echo 'Building..'
-                sh './gradlew clean build -xtest --build-cache --info'
+                sh './gradlew build -xtest --build-cache --info'
             }
         }
         stage('Test') {
