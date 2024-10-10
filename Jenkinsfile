@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        docker {'image: alpine:jdk-21'}
+        docker {'image: alpine/java:22-jdk'}
     }
 
     triggers {
