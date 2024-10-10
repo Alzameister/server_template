@@ -11,16 +11,13 @@ pipeline {
 
     stages {
         stage('Build') {
-            agent {
-                docker {
-                    image 'gradle:jdk21'
-                    reuseNode true
-                }
-            }
             steps {
                 echo 'Building..'
-
-                sh './gradlew --info'
+                script {
+                    docker.image('gradle:jdk21').inside {
+                        sh './gradlew --info'
+                    }
+                }
             }
         }
         stage('Test') {
